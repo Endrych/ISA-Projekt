@@ -1,6 +1,7 @@
 {
     "python.linting.pylintEnabled": false,
     "files.associations": {
-        "in.h": "c"
+        "in.h": "c",
+        "getopt.h": "c"
     }
 }
