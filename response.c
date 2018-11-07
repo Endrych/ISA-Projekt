@@ -39,19 +39,33 @@ void send_ripng_response(char *interface, struct in6_addr address, unsigned int 
     int sockfd;
     sockfd = socket(AF_INET6, SOCK_DGRAM, IPPROTO_UDP);
 
-    // setsockopt(sockfd, SOL_SOCKET, SO_BINDTODEVICE,
-    //            interface, strlen(interface));
+    setsockopt(sockfd, SOL_SOCKET, SO_BINDTODEVICE,
+               interface, strlen(interface));
 
     unsigned int index = if_nametoindex(interface);
-    int hops = 255;
+    unsigned int hops = 255;
     setsockopt(sockfd, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, &hops, sizeof(hops));
     setsockopt(sockfd, IPPROTO_IPV6, IPV6_MULTICAST_IF, &index, sizeof(index));
 
-    struct sockaddr_in6 dest_addr;
+    struct sockaddr_in6 bind_address, dest_addr;
+    ////
+    bzero(&bind_address, sizeof(bind_address));
+    bind_address.sin6_family = AF_INET6;
+    bind_address.sin6_addr = in6addr_any;
+    bind_address.sin6_port = htons(521);
+
+    if (bind(sockfd, (struct sockaddr *)&bind_address, sizeof(bind_address)))
+    {
+        perror("bind ");
+        fprintf(stderr, "Cannot bind socket\n");
+    }
+
+    ////
+    bzero(&dest_addr, sizeof(dest_addr));
     dest_addr.sin6_port = htons(521);
     dest_addr.sin6_family = AF_INET6;
-    inet_pton(AF_INET6, "ff02::9" , &dest_addr.sin6_addr);
-    int sended = sendto(sockfd, packet, packet_size, 0,(struct sockaddr *) &dest_addr, sizeof(dest_addr));
-    printf("Sended: %d\n",sended);
+    inet_pton(AF_INET6, "ff02::9", &dest_addr.sin6_addr);
+    int sended = sendto(sockfd, packet, packet_size, 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
+    printf("Sended: %d\n", sended);
     close(sockfd);
 }
