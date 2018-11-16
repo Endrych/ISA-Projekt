@@ -5,49 +5,50 @@
 #include "sniffer.h"
 #include <pcap.h>
 
-#define PCAP_SNAPLEN 500
-#define PROMISC_MOD 1
-#define PCAP_TIMEOUT 500
+void print_help()
+{
+    printf("Usage ./myripsniffer [-h] [-i INTERFACE]\n\t-h\tshow this help message and exit\n\t-i\tInterface\n");
+}
+
 
 int main(int argc, char *argv[])
 {
     int c;
-
     char *interface = NULL;
     pcap_t *handler = NULL;
     char errbuf[PCAP_ERRBUF_SIZE];
 
+    // Parsovani argumentu
     while ((c = getopt(argc, argv, "hi:")) != -1)
     {
+
         switch (c)
         {
         case 'h':
-            printf("Help\n");
-            return 0;
-            break;
+            print_help();
+            return EXIT_SUCCESS;
         case 'i':
             interface = optarg;
             break;
         }
     }
 
+    // Kontrola jestli byl zadan interface
     if (interface == NULL)
     {
-        printf("Help\n");
+        fprintf(stderr, "ERROR: Missing interface argument\n");
+        print_help();
         exit(EXIT_FAILURE);
     }
 
+    // Pro testovani pomoci pcap souboru
     if (strstr(interface, ".pcap") != NULL)
     {
         handler = pcap_open_offline(interface, errbuf);
         if (handler == NULL)
         {
-            fprintf(stderr, "Could't open %s file\n", interface);
+            fprintf(stderr, "Soubor nebylo mozne otevrit\n");
             exit(EXIT_FAILURE);
-        }
-        else
-        {
-            printf("Open to %s was successfully!\n", interface);
         }
     }
     else
@@ -68,8 +69,8 @@ int main(int argc, char *argv[])
         }
 
         // Open interface for sniffing
-        handler = pcap_open_live(interface, PCAP_SNAPLEN, PROMISC_MOD,
-                                 PCAP_TIMEOUT, errbuf);
+        handler = pcap_open_live(interface, 500, 1,
+                                 500, errbuf);
         if (handler == NULL)
         {
             fprintf(stderr, "Could'nt open interface %s: %s\n", interface, errbuf);
@@ -92,8 +93,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    // cnt = 0 => Infinity loop
-    pcap_loop(handler, 0, parse_packet, NULL);
+    pcap_loop(handler, 1, parse_packet, NULL);
     pcap_close(handler);
 
     return 0;

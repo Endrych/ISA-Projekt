@@ -90,7 +90,7 @@ void print_ripv2_entry(struct entry *entry)
             for (int i = 0; i < 16; i++)
             {
                 int c = entry->auth[i];
-                printf("%x", c);
+                printf("%.2x", c);
             }
             printf("\n\n");
         }
@@ -219,7 +219,7 @@ void parse_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *
     struct udpheader *udp = (struct udpheader *)packet;
     print_udp_header(udp);
     packet += sizeof(struct udpheader);
-    int rip_length = ntohs(udp->length) - UDP_HEADER_LEN;
+    int rip_length = ntohs(udp->length) - sizeof(struct udpheader);
 
     if (ntohs(eth->type) == 0x0800)
     {
