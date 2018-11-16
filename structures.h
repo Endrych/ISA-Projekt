@@ -66,6 +66,13 @@ struct entry{
             uint8_t next_hop[4];
             uint32_t metric;
         };
+        struct{
+            uint16_t diggest_offset;
+            uint8_t key_id;
+            uint8_t auth_data_len;
+            uint32_t seq_number;
+            uint8_t must_be_zero[8];
+        };
     };
 };
 

@@ -5,7 +5,6 @@
 #include "sniffer.h"
 #include <pcap.h>
 
-
 #define PCAP_SNAPLEN 500
 #define PROMISC_MOD 1
 #define PCAP_TIMEOUT 500
@@ -13,8 +12,7 @@
 int main(int argc, char *argv[])
 {
     int c;
-    ;
-    ;
+
     char *interface = NULL;
     pcap_t *handler = NULL;
     char errbuf[PCAP_ERRBUF_SIZE];
@@ -54,13 +52,13 @@ int main(int argc, char *argv[])
     }
     else
     {
-        char filter_exp[] =             // The filter expression
-                "portrange 520-521 and udp";
+        char filter_exp[] = // The filter expression
+            "portrange 520-521 and udp";
         //          "portrange 520 and udp";
-        struct bpf_program filter;      // The compiled expression
+        struct bpf_program filter; // The compiled expression
 
-        bpf_u_int32 mask;               // The netmask of sniffing device
-        bpf_u_int32 net;                // The IP of sniffing device
+        bpf_u_int32 mask; // The netmask of sniffing device
+        bpf_u_int32 net;  // The IP of sniffing device
 
         // Get the IP and netmask of device
         if (pcap_lookupnet(interface, &net, &mask, errbuf) < 0)
