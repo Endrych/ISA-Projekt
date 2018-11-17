@@ -2,6 +2,11 @@
 #include <string.h>
 #include "response.h"
 
+void print_help()
+{
+    printf("Usage ./myripsniffer [-h] [-i INTERFACE]\n\t-h\tshow this help message and exit\n\t-i\tInterface\n");
+}
+
 int main(int argc, char *argv[])
 {
     int c;
@@ -27,13 +32,16 @@ int main(int argc, char *argv[])
         switch (c)
         {
         case 'h':
-            printf("Help\n");
+            print_help();
             return EXIT_SUCCESS;
             break;
         case 'i':
             interface = optarg;
             break;
         case 'r':
+            /**
+             * Zpracovani adresy podvrhavane site
+             */
             addr = strtok(optarg, "/");
             if (!inet_pton(AF_INET6, addr, &address))
             {
@@ -42,6 +50,9 @@ int main(int argc, char *argv[])
             }
             set_addr = 1;
 
+            /**
+             * Zpracovani prefixu adresy site
+             */
             char *prefix = strtok(NULL, "/");
             if (prefix == NULL)
             {
@@ -55,6 +66,9 @@ int main(int argc, char *argv[])
             hop_count = atoi(optarg);
             break;
         case 'n':
+            /*
+             *  Zpracovani adresy next hopu
+             */
             if (!inet_pton(AF_INET6, optarg, &next_hop_address))
             {
                 fprintf(stderr, "Invalid format of IPv6 address.\n");
@@ -67,6 +81,9 @@ int main(int argc, char *argv[])
         }
     }
 
+    /**
+     * Kontrola jestli jsou znamy vsechny dulezite informace
+     */
     if (set_addr != 1 || adress_prefix == -1 || interface == NULL)
     {
         fprintf(stderr, "Required arguments not set.\n./myripresponse -h for help.\n");

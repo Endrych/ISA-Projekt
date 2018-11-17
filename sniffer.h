@@ -12,7 +12,7 @@
  * @param label Popis vystupu (Na vystupu bude retezec {label: adresa}  )
  * @param address mac adresa
  */
-void print_mac(char *label, unsigned char* address);
+void print_mac(char *label, unsigned char *address);
 
 /**
  * @brief Funkce vytiskne ethernetovou hlavicku
@@ -49,7 +49,7 @@ void print_ipv6_header(struct ipv6header *ipv6);
  * 
  * @param ipv4 Struktura reprezentujici IPv4 hlavicku
  */
-void print_ipv4_header(struct ipv4header* ipv4);
+void print_ipv4_header(struct ipv4header *ipv4);
 
 /**
  * @brief Funkce vytiskne hlavicku UDP protokolu
@@ -73,34 +73,34 @@ void print_ripv1_body(struct ripv1body *body);
 void print_ripv2_entry(struct entry *entry);
 
 /**
- * @brief 
+ * @brief Funkce rozparsuje a tiskne informace z rip packetu
  * 
- * @param packet 
- * @param rip_legth
+ * @param packet Packet ze ktereho se informace parsuji
+ * @param rip_legth Velikost rip packetu
  */
 void parse_rip(const u_char *packet, int rip_legth);
 
 /**
- * @brief 
+ * @brief  Funkce vytiskne informace z ripng entry
  * 
- * @param entry 
+ * @param entry Struktura reprezentujici RIPng entry
  */
 void print_ripng_entry(struct entryng *entry);
 
 /**
- * @brief 
+ * @brief Funkce rozparsuje a tiskne informace z RIPng packetu
  * 
- * @param packet
- * @param rip_length
+ * @param packet  Packet ze ktereho se informace parsuji
+ * @param rip_length Velikost packetu
  */
-void parse_ripng(const u_char *packet, int rip_length)
+void parse_ripng(const u_char *packet, int rip_length);
 
 /**
- * @brief 
+ * @brief Funkce parsuje packet ktery prijde na rozhrani
  * 
- * @param args 
- * @param header 
- * @param packet 
+ * @param args argumenty
+ * @param header hlavicka
+ * @param packet Packet ktery se ma rozparssovat
  */
 void parse_packet(uint8_t *args, const struct pcap_pkthdr *header, const uint8_t *packet);
 

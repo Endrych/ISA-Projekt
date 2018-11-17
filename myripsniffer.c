@@ -2,14 +2,13 @@
 #include <getopt.h>
 #include <string.h>
 #include <stdlib.h>
-#include "sniffer.h"
 #include <pcap.h>
+#include "sniffer.h"
 
 void print_help()
 {
     printf("Usage ./myripsniffer [-h] [-i INTERFACE]\n\t-h\tshow this help message and exit\n\t-i\tInterface\n");
 }
-
 
 int main(int argc, char *argv[])
 {
@@ -47,28 +46,28 @@ int main(int argc, char *argv[])
         handler = pcap_open_offline(interface, errbuf);
         if (handler == NULL)
         {
-            fprintf(stderr, "Soubor nebylo mozne otevrit\n");
+            fprintf(stderr, "Cannot open file\n");
             exit(EXIT_FAILURE);
         }
     }
     else
     {
-        char filter_exp[] = // The filter expression
+        char filter_exp[] = // Filtr
             "portrange 520-521 and udp";
-        //          "portrange 520 and udp";
-        struct bpf_program filter; // The compiled expression
 
-        bpf_u_int32 mask; // The netmask of sniffing device
-        bpf_u_int32 net;  // The IP of sniffing device
+        struct bpf_program filter;
 
-        // Get the IP and netmask of device
+        bpf_u_int32 mask;
+        bpf_u_int32 net;
+
+        // Ziskani ip a site
         if (pcap_lookupnet(interface, &net, &mask, errbuf) < 0)
         {
             fprintf(stderr, "Can't get network number for interface %s\n", interface);
             exit(EXIT_FAILURE);
         }
 
-        // Open interface for sniffing
+        // Otevreni interfacu pro sniffing
         handler = pcap_open_live(interface, 500, 1,
                                  500, errbuf);
         if (handler == NULL)
@@ -77,7 +76,7 @@ int main(int argc, char *argv[])
             exit(EXIT_FAILURE);
         }
 
-        // Compile and set the filter
+        // Kompilace a nastaveni filtru
         if (pcap_compile(handler, &filter, filter_exp, 0, net) < 0)
         {
             fprintf(stderr, "Couldn't parse this filter %s: %s\n",
@@ -93,7 +92,10 @@ int main(int argc, char *argv[])
         }
     }
 
-    pcap_loop(handler, 1, parse_packet, NULL);
+    /**
+     * Monitoring a posilani packetu do funkce parse packet
+     */
+    pcap_loop(handler, 0, parse_packet, NULL);
     pcap_close(handler);
 
     return 0;
