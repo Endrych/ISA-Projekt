@@ -2,7 +2,8 @@
 
 void ipv6_to_uint8_t(struct in6_addr address, uint8_t *new_addr)
 {
-    for (int i = 0; i < 16; i++)
+    int i = 0;
+    for (i = 0; i < 16; i++)
     {
         new_addr[i] = address.s6_addr[i];
     }

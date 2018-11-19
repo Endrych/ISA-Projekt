@@ -3,7 +3,8 @@
 void print_mac(char *label, unsigned char *address)
 {
     printf("%s: ", label);
-    for (int i = 0; i < 5; i++)
+    int i = 0;
+    for (i = 0; i < 5; i++)
     {
         printf("%.2x:", address[i]);
     }
@@ -101,7 +102,8 @@ void print_ripv2_entry(struct entry *entry)
              */
             printf("------Authentication Data Trailer------\n");
             printf("Authentication Data: ");
-            for (int i = 0; i < 16; i++)
+            int i = 0;
+            for (i = 0; i < 16; i++)
             {
                 int c = entry->auth[i];
                 printf("%.2x", c);
@@ -118,7 +120,8 @@ void print_ripv2_entry(struct entry *entry)
 
             printf("Password: ");
 
-            for (int i = 0; i < 16; i++)
+            int i = 0;
+            for (i = 0; i < 16; i++)
             {
                 int c = entry->auth[i];
                 if (c != '\0')

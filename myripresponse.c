@@ -61,9 +61,23 @@ int main(int argc, char *argv[])
             }
 
             adress_prefix = strtoul(prefix, NULL, 0);
+
+            /**
+             * Kontrola hodnoty prefixu
+             */
+            if (adress_prefix < 16 || adress_prefix > 128)
+            {
+                fprintf(stderr, "Wrong value of address prefix.\n./myripresponse -h for help.\n");
+                exit(EXIT_FAILURE);
+            }
             break;
         case 'm':
             hop_count = atoi(optarg);
+            if (hop_count < 0 || hop_count > 16)
+            {
+                fprintf(stderr, "Wrong value of hop count.\n./myripresponse -h for help.\n");
+                exit(EXIT_FAILURE);
+            }
             break;
         case 'n':
             /*
@@ -77,6 +91,11 @@ int main(int argc, char *argv[])
             break;
         case 't':
             router_tag = atoi(optarg);
+            if (router_tag < 0 || router_tag > 65535)
+            {
+                fprintf(stderr, "Wrong value of router tag.\n./myripresponse -h for help.\n");
+                exit(EXIT_FAILURE);
+            }
             break;
         }
     }
